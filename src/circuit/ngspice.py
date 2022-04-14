@@ -1,5 +1,7 @@
 import sys
 import subprocess
+import os 
+
 
 from asyncio.subprocess import DEVNULL
 
@@ -20,7 +22,7 @@ def call(args, cwd = None, timeout = 15):
 
 def runSimulator(netlist, cwd):
   #runs ngspice and gives a timeout of 15 seconds
-  call(["ngspice", "-b", netlist, "-o", AC_Measures, "-r", OP_Measures], cwd=cwd, timeout=15)
+  call(["ngspice_con", "-b", netlist, "-o", AC_Measures, "-r", OP_Measures], cwd=cwd, timeout=15)
 
 def parseMeasures(cwd):
   measures = {}
@@ -66,10 +68,14 @@ def parseMeasures(cwd):
 def removePreviousFiles(cwd):
   #Remove old output files if exist (NGSpice and parser outputs)
   
-  call(['rm','-f', ACEI_OUT], cwd=cwd)
-    
-  call(['rm','-f',AC_Measures], cwd=cwd)
-  call(['rm','-f',OP_Measures], cwd=cwd)
+  try:
+    os.remove(AC_Measures)
+    os.remove(OP_Measures)
+    os.remove(ACEI_OUT)
+
+  except FileNotFoundError:
+    pass
+
 
 def writeDesignVar(cwd, param, val):
   try:
