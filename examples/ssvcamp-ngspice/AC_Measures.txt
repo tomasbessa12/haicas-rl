@@ -1,0 +1,48 @@
+
+Circuit: * aida  includes 
+
+Doing analysis at TEMP = 25.000000 and TNOM = 27.000000
+
+
+
+No. of Data Rows : 1
+
+
+No. of Data Rows : 2001
+gdc                 =  4.036631e+01
+gbw                 =  1.170482e+08
+pm                  =  6.780463e+01
+Doing analysis at TEMP = 25.000000 and TNOM = 27.000000
+
+
+
+No. of Data Rows : 94
+
+
+No. of Data Rows : 1
+inoise_total = 5.903296e-09
+onoise_total = 1.680857e-05
+Doing analysis at TEMP = 25.000000 and TNOM = 27.000000
+
+
+
+No. of Data Rows : 1
+Doing analysis at TEMP = 25.000000 and TNOM = 27.000000
+
+No. of Data Columns : 64  
+
+No. of Data Rows : 1
+OP information in rawfile.
+elapsed time since last call: 0.097 seconds.
+
+Total elapsed time: 0.097 seconds.
+
+Total DRAM available = 31874.464844 MB.
+DRAM currently available = 7211.917969 MB.
+Total ngspice program size = 19.286133 MB.
+Resident set size = 2.014648 MB.
+Shared ngspice pages = 877.000 kB.
+Text (code) pages = 1.822266 MB.
+Stack = 0 bytes.
+Library pages = 3.171875 MB.
+

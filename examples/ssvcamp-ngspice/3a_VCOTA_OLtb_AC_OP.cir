@@ -1,0 +1,159 @@
+* AIDA  includes 
+* dev notes  make AIDA generate includes automatically
+
+.include 'design_var.inc'
+.include 'global-params.inc'
+
+** Generated on: Feb 27 10:58:28 2013
+** Design library name: amplificadores
+** Design cell name: VCOTA
+** Design view name: schematic
+** Highest FOM in Typical Conditions
+
+.OPTION TUNING=FAST
+.OPTION AEX
+
+.LIB "../ptm130/ptm-130.lib" TT
+
+.GLOBAL
+.PARAM vdd=3.3 vcm=1.65 c1=0.000000000006
+
+*********** Unit Under Test ********************
+.include "ssvcamp.cir"
+
+*********** Test-bench *************************
+** Library name: amplificadores
+** Cell name: nova_diff_OLtb
+** View name: schematic
+mnmbias halfvdd halfvdd 0 0 nmos33 w='_w10/_nf10' l=_l10  m='1*_nf10'
+g2 cmfb 0 VCCS halfvdd 0 -1
+g1 cmfb 0 VCCS outputn 0 -500m
+g0 cmfb 0 VCCS outputp 0 -500m
+e3 output 0 VCVS outputp outputn 1
+i0 cmfb 0 DC 1.65
+xinova cmfb 0 vddnet in_n in_p outputn outputp ssvcamp
+cload2 outputp 0 c1
+cload1 outputn 0 c1
+r0 cmfb 0 1
+cload3 output 0 c1
+ibias vddnet halfvdd DC 100u
+vin in_n 0 DC vcm
+vip in_p 0 DC vcm AC 1 sin 1.65 100e-3 1e3
+vdc vddnet 0 DC vdd
+************************************************
+
+
+*********** Analysis ***************************
+.TEMP 25.0
+.OPTION BRIEF=0
+.OPTION KEEPOPINFO
+************************************************
+
+.control
+set filetype = ascii
+set units = degrees
+*set appendwrite
+
+AC DEC 200 1 10G
+
+meas AC GDC FIND vdb(output) at=1
+meas AC GBW WHEN vdb(output)=0
+meas AC PM FIND vp(output) WHEN vdb(output)=0
+
+noise v(output) vip DEC 10 0.1 200000k
+print inoise_total onoise_total
+
+
+*write AC_Measures.txt
+
+.endc
+
+.OP
+.control
+save v(output)
+save v(in_p)
+save v(in_n)
+save @m.xinova.mpm0[vgs]
+save @m.xinova.mpm0[vth]
+save @m.xinova.mpm0[vds]
+save @m.xinova.mpm0[vdsat]
+save @m.xinova.mpm0[id]
+
+save @m.xinova.mpm1[vgs]
+save @m.xinova.mpm1[vth]
+save @m.xinova.mpm1[vds]
+save @m.xinova.mpm1[vdsat]
+save @m.xinova.mpm1[id]
+
+save @m.xinova.mpm2[vgs]
+save @m.xinova.mpm2[vth]
+save @m.xinova.mpm2[vds]
+save @m.xinova.mpm2[vdsat]
+save @m.xinova.mpm2[id]
+
+save @m.xinova.mpm3[vgs]
+save @m.xinova.mpm3[vth]
+save @m.xinova.mpm3[vds]
+save @m.xinova.mpm3[vdsat]
+save @m.xinova.mpm3[id]
+
+save @m.xinova.mnm4[vgs]
+save @m.xinova.mnm4[vth]
+save @m.xinova.mnm4[vds]
+save @m.xinova.mnm4[vdsat]
+save @m.xinova.mnm4[id]
+
+save @m.xinova.mnm5[vgs]
+save @m.xinova.mnm5[vth]
+save @m.xinova.mnm5[vds]
+save @m.xinova.mnm5[vdsat]
+save @m.xinova.mnm5[id]
+
+save @m.xinova.mnm6[vgs]
+save @m.xinova.mnm6[vth]
+save @m.xinova.mnm6[vds]
+save @m.xinova.mnm6[vdsat]
+save @m.xinova.mnm6[id]
+
+save @m.xinova.mnm7[vgs]
+save @m.xinova.mnm7[vth]
+save @m.xinova.mnm7[vds]
+save @m.xinova.mnm7[vdsat]
+save @m.xinova.mnm7[id]
+
+save @m.xinova.mnm8[vgs]
+save @m.xinova.mnm8[vth]
+save @m.xinova.mnm8[vds]
+save @m.xinova.mnm8[vdsat]
+save @m.xinova.mnm8[id]
+
+save @m.xinova.mnm9[vgs]
+save @m.xinova.mnm9[vth]
+save @m.xinova.mnm9[vds]
+save @m.xinova.mnm9[vdsat]
+save @m.xinova.mnm9[id]
+
+save @m.xinova.mnm10[vgs]
+save @m.xinova.mnm10[vth]
+save @m.xinova.mnm10[vds]
+save @m.xinova.mnm10[vdsat]
+save @m.xinova.mnm10[id]
+
+save @m.xinova.mnm11[vgs]
+save @m.xinova.mnm11[vth]
+save @m.xinova.mnm11[vds]
+save @m.xinova.mnm11[vdsat]
+save @m.xinova.mnm11[id]
+
+*To calculate FOM
+save @vdc[i]
+
+
+run
+*write Measures.txt
+.endc
+
+
+
+
+.END

@@ -1,0 +1,12 @@
+.ALTER SS
+.lib 'L130E_HG_RVT33_V131.lib.eldo' SS
+
+.ALTER SNFP
+.lib 'L130E_HG_RVT33_V131.lib.eldo' SNFP
+
+.ALTER FNSP
+.lib 'L130E_HG_RVT33_V131.lib.eldo' FNSP
+
+.ALTER FF
+.lib 'L130E_HG_RVT33_V131.lib.eldo' FF
+
