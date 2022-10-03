@@ -27,9 +27,9 @@ class VCAmplifierCircuit:
     self.ranges = np.array([[1e-6, 100e-6, 1e-6],[1e-6,100e-6, 1e-6],
                             [1e-6,100e-6, 1e-6],[1e-6,100e-6, 1e-6],
                             [1e-6,100e-6, 1e-6],[1e-6,100e-6, 1e-6],
-                            [0.34e-6,1e-6, 0.1e-6],[0.34e-6,1e-6, 0.1e-6],
-                            [0.34e-6,1e-6, 0.1e-6],[0.34e-6,1e-6, 0.1e-6],
-                            [0.34e-6,1e-6, 0.1e-6],[0.34e-6,1e-6, 0.1e-6],
+                            [0.34e-6,10e-6, 0.1e-6],[0.34e-6,10e-6, 0.1e-6],
+                            [0.34e-6,10e-6, 0.1e-6],[0.34e-6,10e-6, 0.1e-6],
+                            [0.34e-6,10e-6, 0.1e-6],[0.34e-6,10e-6, 0.1e-6],
                             [1,8, 1],[1,8,1],[1,8,1],[1,8,1],[1,8,1],[1,8,1]])
 
     self.folder = "./examples/ssvcamp-ngspice/"
@@ -259,7 +259,7 @@ class VCAmpRLEnvDiscrete(VcAmpRLEnv):
   '''
   
   ACTIONS = []
-  STEPS = [1]
+  STEPS = [1, 10]
   
   def __init__(self):
     '''
@@ -303,7 +303,7 @@ class VCAmpRLEnvDiscrete(VcAmpRLEnv):
     reward = 0
     # reward 100 if feasible
 
-    #done = done or (self.iter >= 200) 
+    done = done or (self.iter >= 200) or (next_performance < -3000)
 
     reward = (next_performance) if not done else -100
     if next_performance == 0: reward = 200
