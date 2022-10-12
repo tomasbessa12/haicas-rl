@@ -23,7 +23,7 @@ class VCAmplifierCircuit:
                        '_l6','_l4','_l10','_l1','_l0',
                        "_nf8","_nf6", "_nf4", "_nf10", "_nf1", "_nf0" )
 
-    #parameters ranges (mion, max, grid)
+    #parameters ranges (min, max, grid)
     self.ranges = np.array([[1e-6, 100e-6, 1e-6],[1e-6,100e-6, 1e-6],
                             [1e-6,100e-6, 1e-6],[1e-6,100e-6, 1e-6],
                             [1e-6,100e-6, 1e-6],[1e-6,100e-6, 1e-6],
@@ -76,7 +76,8 @@ class VCAmplifierCircuit:
     #move to grid
     parameter_values = np.round(parameter_values / self.ranges[:,2])*self.ranges[:,2]
     parameter_values = np.fmin(np.fmax(parameter_values,self.ranges[:, 0]),self.ranges[:,1])
-    
+    # print("parameter values: ", parameter_values)
+
     return self._extended_meas(
       ng.simulate(
         cwd = self.folder, 
@@ -154,10 +155,31 @@ class VcAmpRLEnv(VCAmplifierCircuit):
                             9.4000e-07, 8.8000e-07, 6.7000e-07, 8.9000e-07, 8.9000e-07, 8.4000e-07,
                             5.0000e+00, 1.0000e+00, 7.0000e+00, 1.0000e+00, 3.0000e+00, 3.0000e+00])
     
+    #Target 0 - Balanced
+    # self.target = ng.Specifications(
+    #   lt={'idd': 350e-6,'pm' : 90.0}, 
+    #   gt={'gdc': 50,'gbw': 35e6,'pm' : 45.0})
 
+    # Target 1 - Balanced but harder
+    # self.target = ng.Specifications(
+    #   lt={'idd': 300e-6,'pm' : 90.0}, 
+    #   gt={'gdc': 50,'gbw': 40e6,'pm' : 45.0})
+
+    # Target 2 - >> GBW
+    # self.target = ng.Specifications(ss
+    #   lt={'idd': 700e-6,'pm' : 90.0}, 
+    #   gt={'gdc': 40,'gbw': 120e6,'pm' : 45.0})
+
+    # Target 3 - < IDD
+    # self.target = ng.Specifications(
+    #   lt={'idd': 210e-6,'pm' : 90.0}, 
+    #   gt={'gdc': 40,'gbw': 25e6,'pm' : 45.0})
+
+    # Target 4 - <<< IDD
     self.target = ng.Specifications(
-      lt={'idd': 35e-5,'pm' : 90.0}, 
-      gt={'gdc': 50,'gbw': 35e6,'pm' : 45.0})
+      lt={'idd': 130e-6,'pm' : 90.0}, 
+      gt={'gdc': 40,'gbw': 20e5,'pm' : 45.0})
+
 
     self.state_scale = self._run_simulation()
     self.state_size = len(self.state_scale)
@@ -306,10 +328,10 @@ class VCAmpRLEnvDiscrete(VcAmpRLEnv):
     done = done or (self.iter >= 200) or (next_performance < -3000)
 
     reward = (next_performance) if not done else -100
-    if next_performance == 0: reward = 200
-    # if next_performance<-500: 
+    if next_performance == 0: reward = 2000
+    # if next_performance <-500: 
     #   reward = -500
-    #   done = True
+      # done = True
 
 
     # UNSTEP FUNCTION
