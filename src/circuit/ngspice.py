@@ -181,11 +181,50 @@ if __name__ == '__main__':
            9.4000e-07, 8.8000e-07, 6.7000e-07, 8.9000e-07, 8.9000e-07, 8.4000e-07,
            5.0000e+00, 1.0000e+00, 7.0000e+00, 1.0000e+00, 3.0000e+00, 3.0000e+00)
   
-  folder = "examples/ssvcamp-ngspice/"
+  folder = "./examples/ssvcamp-ngspice/"
   
   measures = simulate(cwd = folder, netlist="3a_VCOTA_OLtb_AC_OP.cir", param = parameters, val = values)
   
-  
   print(measures)	
+
+
+  fcas = {
+    "_wp5": 1.8500e-05,
+    "_wp3": 1.1300e-05,
+    "_wp1": 2.6690e-04,
+    "_wp0": 5.4900e-05,
+    "_wn7":1.1760e-04,
+    "_wn5":1.2510e-04,
+    "_wn3":8.5000e-05,
+    "_wn2":9.5000e-06,
+    "_wn1":5.5000e-06,
+    "_nfp5":1.1000e+01,
+    "_nfp3":5.0000e+00,
+    "_nfp1":5.0000e+00,
+    "_nfp0":1.1000e+01,
+    "_nfn7":1.3000e+01,
+    "_nfn5":1.3000e+01,
+    "_nfn3":5.0000e+00,
+    "_nfn2":1.5000e+01,
+    "_nfn1":3.0000e+00,
+    "_lp1":8.8000e-07,
+    "_lp0":1.4000e-06,
+    "_ln7":1.0500e-06,
+    "_ln5":1.4800e-06,
+    "_ln3":7.4000e-07,
+    "_ln1":2.3100e-06
+  }
+
+  parameters_fcas = [k for k in fcas.keys]
+  values_fcas = [fcas[k] for k in fcas.keys]
+
+  folder = "examples/fcas-ngspice/"
+
+
+  print(measures)	
+
+
+
+
     
 
