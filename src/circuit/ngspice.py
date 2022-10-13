@@ -215,13 +215,15 @@ if __name__ == '__main__':
     "_ln1":2.3100e-06
   }
 
-  parameters_fcas = [k for k in fcas.keys]
-  values_fcas = [fcas[k] for k in fcas.keys]
+  parameters_fcas = [k for k in fcas.keys()]
+  values_fcas = [fcas[k] for k in fcas.keys()]
 
-  folder = "examples/fcas-ngspice/"
+  folder = "./examples/fcas-ngspice/cir/"
 
+  measures = simulate(cwd = folder, netlist="tb_ac.cir", param = parameters_fcas, val = values_fcas)
 
-  print(measures)	
+  for m in ('idd', 'pm', 'gdc', 'gbw', 'fom'):
+    print(m, measures.get(m, None))	
 
 
 

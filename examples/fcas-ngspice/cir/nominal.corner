@@ -1,2 +1,2 @@
 ** Nominal 
-.lib "../../../device_models/libs/ptm130.spice.lib" TT
+.LIB "../../ptm130/ptm-130.lib" TT

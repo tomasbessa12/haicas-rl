@@ -54,7 +54,7 @@ set filetype = ascii
 set units = degrees
 *set appendwrite
 
-AC DEC 200 1 10G
+AC DEC 41 1 1G
 
 meas AC GDC FIND vdb(output) at=1
 meas AC GBW WHEN vdb(output)=0

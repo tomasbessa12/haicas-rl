@@ -2,7 +2,7 @@
 .*
 **/__pycache__/**
 
-examples/ssvcamp-ngspice/AC_Measures.txt
-examples/ssvcamp-ngspice/bsim4.out
-examples/ssvcamp-ngspice/design_var.inc
-examples/ssvcamp-ngspice/OP_Measures.txt
+examples/**/AC_Measures.txt
+examples/**/bsim4.out
+examples/**/design_var.inc
+examples/**/OP_Measures.txt
