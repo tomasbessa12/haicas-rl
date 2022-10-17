@@ -237,7 +237,7 @@ class FoldedCascodeRLEnvDiscrete(FoldedCascodeRLEnv):
   '''
   
   ACTIONS = []
-  STEPS = [1, 5, 10, 50, 100]
+  STEPS = [1, 10]#, 50, 100]
   
   def __init__(self):
     '''
@@ -281,16 +281,24 @@ class FoldedCascodeRLEnvDiscrete(FoldedCascodeRLEnv):
     # reward 100 if feasible
 
 
-    reward = math.tanh(0.001*next_performance)
-    if next_performance == 0: reward = 1
-    
-    
-    if(self.current_performance > next_performance) and (random.random() > 0.5):
+    done = done or (self.iter >= 200) or (next_performance < -3000)
+
+    reward = (next_performance) if not done else -100
+    if next_performance == 0: reward = 2000
+    # if next_performance <-500: 
+    #   reward = -500
+      # done = True
+
+
+    # UNSTEP FUNCTION
+    if(self.current_performance > next_performance): 
       #todo add some anneling schedlre here
-      self.values = previous_values
-      self.obs = previous_obs
+     self.values = previous_values
+     self.obs = previous_obs
     
-    done = done or (self.iter >= 1000) 
+    else: 
+      self.current_performance = next_performance
+   
 
     return self.obs, reward, done, log
 

@@ -9,6 +9,7 @@ from asyncio.subprocess import DEVNULL
 ACEI_OUT = 'ACEI_OUT.dat'
 AC_Measures = 'AC_Measures.txt'
 OP_Measures = 'OP_Measures.txt'
+print("LOAD NGSPICE\n")
 
 
 def call(args, cwd = None, timeout = 15):
@@ -17,12 +18,14 @@ def call(args, cwd = None, timeout = 15):
     p.wait(timeout=timeout)
   except subprocess.TimeoutExpired:
     sys.exit("Simulation ran too long!")
+    
 
 
 
 def runSimulator(netlist, cwd):
   #runs ngspice and gives a timeout of 15 seconds
   call(["ngspice_con", "-b", netlist, "-o", AC_Measures, "-r", OP_Measures], cwd=cwd, timeout=15)
+  print("ERROOOOOOOOOOOOOOO")
 
 def parseMeasures(cwd):
   measures = {}
@@ -61,7 +64,8 @@ def parseMeasures(cwd):
           listOfMeas.append(line[line.find("(")+1:line.find(")")])
           
   except IOError:
-    print("File with OP measures not found!")
+    # print("File with OP measures not found!")
+    pass
   return measures
 
 
@@ -164,7 +168,7 @@ class Specifications:
   def verify(self, measures):
     obj, gsum, log = self.verifyMOO(measures)
     
-    return sum(obj) + gsum / (len(self.gt) + len(self.lt)), gsum==0, log
+    return gsum, gsum==0, log
   
 
   

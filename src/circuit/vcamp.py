@@ -19,13 +19,17 @@ class VCAmplifierCircuit:
     Constructor all needeed parameters to simualte circuit 
     '''
     #parameters names wihc are the desing variables
-    self.parameters = ('_w8','_w6','_w4','_w10','_w1','_w0', '_l8','_l6','_l4','_l10','_l1','_l0', "_nf8","_nf6", "_nf4", "_nf10", "_nf1", "_nf0" )
+    self.parameters = ('_w8','_w6','_w4','_w10','_w1','_w0', '_l8',
+                       '_l6','_l4','_l10','_l1','_l0',
+                       "_nf8","_nf6", "_nf4", "_nf10", "_nf1", "_nf0" )
 
-    #parameters ranges (mion, max, grid)
-    self.ranges = np.array([[1e-6, 100e-6, 0.1e-6],[1e-6,100e-6, 0.1e-6],[1e-6,100e-6, 0.1e-6],[1e-6,100e-6, 0.1e-6],
-                            [1e-6,100e-6, 0.1e-6],[1e-6,100e-6, 0.1e-6],
-                            [0.34e-6,1e-6, 0.1e-6],[0.34e-6,1e-6, 0.1e-6],[0.34e-6,1e-6, 0.1e-6],[0.34e-6,1e-6, 0.1e-6],
-                            [0.34e-6,1e-6, 0.1e-6],[0.34e-6,1e-6, 0.1e-6],
+    #parameters ranges (min, max, grid)
+    self.ranges = np.array([[1e-6, 100e-6, 1e-6],[1e-6,100e-6, 1e-6],
+                            [1e-6,100e-6, 1e-6],[1e-6,100e-6, 1e-6],
+                            [1e-6,100e-6, 1e-6],[1e-6,100e-6, 1e-6],
+                            [0.34e-6,10e-6, 0.1e-6],[0.34e-6,10e-6, 0.1e-6],
+                            [0.34e-6,10e-6, 0.1e-6],[0.34e-6,10e-6, 0.1e-6],
+                            [0.34e-6,10e-6, 0.1e-6],[0.34e-6,10e-6, 0.1e-6],
                             [1,8, 1],[1,8,1],[1,8,1],[1,8,1],[1,8,1],[1,8,1]])
 
     self.folder = "./examples/ssvcamp-ngspice/"
@@ -72,7 +76,8 @@ class VCAmplifierCircuit:
     #move to grid
     parameter_values = np.round(parameter_values / self.ranges[:,2])*self.ranges[:,2]
     parameter_values = np.fmin(np.fmax(parameter_values,self.ranges[:, 0]),self.ranges[:,1])
-    
+    # print("parameter values: ", parameter_values)
+
     return self._extended_meas(
       ng.simulate(
         cwd = self.folder, 
@@ -146,9 +151,35 @@ class VcAmpRLEnv(VCAmplifierCircuit):
                             9.4000e-07, 8.8000e-07, 6.7000e-07, 8.9000e-07, 8.9000e-07, 8.4000e-07,
                             5.0000e+00, 1.0000e+00, 7.0000e+00, 1.0000e+00, 3.0000e+00, 3.0000e+00])
     
+    self.values_init = np.array([1.0000e-06, 7.1800e-05, 1.5700e-05, 2.2000e-06, 1.6000e-06, 9.0000e-06,
+                            9.4000e-07, 8.8000e-07, 6.7000e-07, 8.9000e-07, 8.9000e-07, 8.4000e-07,
+                            5.0000e+00, 1.0000e+00, 7.0000e+00, 1.0000e+00, 3.0000e+00, 3.0000e+00])
+    
+    #Target 0 - Balanced
     self.target = ng.Specifications(
-      lt={'idd': 35e-5,'pm' : 90.0}, 
+      lt={'idd': 350e-6,'pm' : 90.0}, 
       gt={'gdc': 50,'gbw': 35e6,'pm' : 45.0})
+
+    # Target 1 - Balanced but harder
+    # self.target = ng.Specifications(
+    #   lt={'idd': 300e-6,'pm' : 90.0}, 
+    #   gt={'gdc': 50,'gbw': 40e6,'pm' : 45.0})
+
+    # Target 2 - >> GBW
+    # self.target = ng.Specifications(
+    #   lt={'idd': 700e-6,'pm' : 90.0}, 
+    #   gt={'gdc': 40,'gbw': 120e6,'pm' : 45.0})
+
+    # Target 3 - < IDD
+    # self.target = ng.Specifications(
+    #   lt={'idd': 210e-6,'pm' : 90.0}, 
+    #   gt={'gdc': 40,'gbw': 25e6,'pm' : 45.0})
+
+    # Target 4 - <<< IDD
+    # self.target = ng.Specifications(
+    #   lt={'idd': 130e-6,'pm' : 90.0}, 
+    #   gt={'gdc': 40,'gbw': 20e5,'pm' : 45.0})
+
 
     self.state_scale = self._run_simulation()
     self.state_size = len(self.state_scale)
@@ -202,7 +233,8 @@ class VcAmpRLEnv(VCAmplifierCircuit):
 		Can be made to ensure initial sizing simulates all measures
 		"""
     if values is None :
-      self.values = np.random.rand(len(self.parameters))
+      # self.values = np.random.rand(len(self.parameters))
+      self.values = self.values_init
       self.values = self.ranges[:, 0] + self.values*(self.ranges[:,1] - self.ranges[:, 0]) 
       self.values = np.round(self.values / self.ranges[:,2])*self.ranges[:,2]
     else:
@@ -227,10 +259,16 @@ class VcAmpRLEnv(VCAmplifierCircuit):
   def _run_simulation(self):
     self.measures = self.simulate(self.values)
     meas = np.array(list(self.measures.values()), dtype=float)
-    obs = np.concatenate((np.array(self.target.asarray()), self.values, meas))
+    obs = np.concatenate((np.array(self.target.asarray()), self.values))
+    
+    # obs = np.concatenate((np.array(self.target.asarray()), self.values, meas))
+
 
     return obs
 
+
+def sigmoid(x):
+  return 1 / (1 + math.exp(-x))
 
 class VCAmpRLEnvDiscrete(VcAmpRLEnv):
   '''
@@ -244,7 +282,7 @@ class VCAmpRLEnvDiscrete(VcAmpRLEnv):
   '''
   
   ACTIONS = []
-  STEPS = [1, 5, 10, 50, 100]
+  STEPS = [1, 10]
   
   def __init__(self):
     '''
@@ -252,7 +290,7 @@ class VCAmpRLEnvDiscrete(VcAmpRLEnv):
     '''
     VcAmpRLEnv.__init__(self)
 
-    for var_index in range(12):
+    for var_index in range(len(self.ranges)):
       for step in self.STEPS:
         #add only actions that make sense with the ranges
         if(step * self.ranges[var_index,2] + self.ranges[var_index,0] < self.ranges[var_index,1]):
@@ -260,6 +298,7 @@ class VCAmpRLEnvDiscrete(VcAmpRLEnv):
           self.ACTIONS.append((var_index, -step))
 
     self.action_size = len(self.ACTIONS)
+
 
   def step(self, a):
     """
@@ -287,20 +326,29 @@ class VCAmpRLEnvDiscrete(VcAmpRLEnv):
     reward = 0
     # reward 100 if feasible
 
+    done = done or (self.iter >= 200) or (next_performance < -3000)
 
-    reward = math.tanh(0.001*next_performance)
-    if next_performance == 0: reward = 1
-    
-    
-    if(self.current_performance > next_performance) and (random.random() > 0.5):
+    reward = (next_performance) if not done else -100
+    if next_performance == 0: reward = 2000
+    # if next_performance <-500: 
+    #   reward = -500
+      # done = True
+
+
+    # UNSTEP FUNCTION
+    if(self.current_performance > next_performance): 
       #todo add some anneling schedlre here
-      self.values = previous_values
-      self.obs = previous_obs
+     self.values = previous_values
+     self.obs = previous_obs
     
-    done = done or (self.iter >= 1000) 
+    else: 
+      self.current_performance = next_performance
+   
 
     return self.obs, reward, done, log
 
+
+# RESET
   def reset(self, values=None):
     """
     Sets new initial values and target specs.
@@ -320,6 +368,7 @@ class VCAmpRLEnvDiscrete(VcAmpRLEnv):
     self.obs = self._run_simulation()
     self.current_performance, done, self.current_performance_log = self.target.verify(self.measures)
 
+    # Resultado da simulação
     return self.obs
 
   def sample_action(self):
