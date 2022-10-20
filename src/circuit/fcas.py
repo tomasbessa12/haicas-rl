@@ -139,8 +139,8 @@ class FoldedCascodeRLEnv(FoldedCascodeCircuit):
         5.0000e+00, 1.5000e+01, 3.0000e+00])
     
     self.target = ng.Specifications(
-      lt={'idd': 200e-6,'pm' : 90.0}, 
-      gt={'gdc': 70,'gbw': 60e6,'pm' : 45.0, 'fom' : 1000 })
+      lt={'idd': 600e-6,'pm' : 90.0}, 
+      gt={'gdc': 50,'gbw': 45e6,'pm' : 45.0, 'fom' : 600 })
 
 
     self.state_scale = self._run_simulation()
@@ -324,6 +324,8 @@ class FoldedCascodeRLEnvDiscrete(FoldedCascodeRLEnv):
 
     self.obs = self._run_simulation()
     self.current_performance, done, self.current_performance_log = self.target.verify(self.measures)
+
+    print("On Reset\n" + str(self.current_performance_log))
 
     return self.obs
 
