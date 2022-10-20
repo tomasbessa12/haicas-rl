@@ -9,7 +9,7 @@ from asyncio.subprocess import DEVNULL
 ACEI_OUT = 'ACEI_OUT.dat'
 AC_Measures = 'AC_Measures.txt'
 OP_Measures = 'OP_Measures.txt'
-print("LOAD NGSPICE\n")
+# print("LOAD NGSPICE\n")
 
 
 def call(args, cwd = None, timeout = 15):
@@ -25,7 +25,7 @@ def call(args, cwd = None, timeout = 15):
 def runSimulator(netlist, cwd):
   #runs ngspice and gives a timeout of 15 seconds
   call(["ngspice_con", "-b", netlist, "-o", AC_Measures, "-r", OP_Measures], cwd=cwd, timeout=15)
-  print("ERROOOOOOOOOOOOOOO")
+  # print("ERROOOOOOOOOOOOOOO")
 
 def parseMeasures(cwd):
   measures = {}

@@ -156,9 +156,9 @@ class VcAmpRLEnv(VCAmplifierCircuit):
                             5.0000e+00, 1.0000e+00, 7.0000e+00, 1.0000e+00, 3.0000e+00, 3.0000e+00])
     
     #Target 0 - Balanced
-    self.target = ng.Specifications(
-      lt={'idd': 350e-6,'pm' : 90.0}, 
-      gt={'gdc': 50,'gbw': 35e6,'pm' : 45.0})
+    # self.target = ng.Specifications(
+    #   lt={'idd': 350e-6,'pm' : 90.0}, 
+    #   gt={'gdc': 50,'gbw': 35e6,'pm' : 45.0})
 
     # Target 1 - Balanced but harder
     # self.target = ng.Specifications(
@@ -176,9 +176,9 @@ class VcAmpRLEnv(VCAmplifierCircuit):
     #   gt={'gdc': 40,'gbw': 25e6,'pm' : 45.0})
 
     # Target 4 - <<< IDD
-    # self.target = ng.Specifications(
-    #   lt={'idd': 130e-6,'pm' : 90.0}, 
-    #   gt={'gdc': 40,'gbw': 20e5,'pm' : 45.0})
+    self.target = ng.Specifications(
+      lt={'idd': 130e-6,'pm' : 90.0}, 
+      gt={'gdc': 40,'gbw': 20e5,'pm' : 45.0})
 
 
     self.state_scale = self._run_simulation()

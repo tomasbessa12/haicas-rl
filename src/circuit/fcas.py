@@ -27,7 +27,7 @@ class FoldedCascodeCircuit:
     #parameters ranges (mion, max, grid)
     self.ranges = np.array([[1e-6, 100e-6, 0.1e-6],[1e-6,100e-6, 0.1e-6],[1e-6,100e-6, 0.1e-6],[1e-6,100e-6, 0.1e-6],
                             [1e-6, 100e-6, 0.1e-6],[1e-6,100e-6, 0.1e-6],[1e-6,100e-6, 0.1e-6],[1e-6,100e-6, 0.1e-6],[1e-6,100e-6, 0.1e-6],
-                            [0.34e-6,1e-6, 0.1e-6],[0.34e-6,1e-6, 0.1e-6],[0.34e-6,1e-6, 0.1e-6],[0.34e-6,1e-6, 0.1e-6],[0.34e-6,1e-6, 0.1e-6],[0.34e-6,1e-6, 0.1e-6],
+                            [0.34e-6,10e-6, 0.1e-6],[0.34e-6,10e-6, 0.1e-6],[0.34e-6,10e-6, 0.1e-6],[0.34e-6,10e-6, 0.1e-6],[0.34e-6,10e-6, 0.1e-6],[0.34e-6,10e-6, 0.1e-6],
                             [1,8,1],[1,8,1],[1,8,1],[1,8,1],
                             [1,8,1],[1,8,1],[1,8,1],[1,8,1],[1,8,1]])
 
@@ -220,10 +220,14 @@ class FoldedCascodeRLEnv(FoldedCascodeCircuit):
   def _run_simulation(self):
     self.measures = self.simulate(self.values)
     meas = np.array(list(self.measures.values()), dtype=float)
-    obs = np.concatenate((np.array(self.target.asarray()), self.values, meas))
+    # obs = np.concatenate((np.array(self.target.asarray()), self.values, meas))
+    obs = np.concatenate((np.array(self.target.asarray()), self.values))
+
 
     return obs
 
+def sigmoid(x):
+  return 1 / (1 + math.exp(-x))
 
 class FoldedCascodeRLEnvDiscrete(FoldedCascodeRLEnv):
   '''
@@ -238,7 +242,7 @@ class FoldedCascodeRLEnvDiscrete(FoldedCascodeRLEnv):
   
   ACTIONS = []
   STEPS = [1, 10]#, 50, 100]
-  
+
   def __init__(self):
     '''
     Constructor
