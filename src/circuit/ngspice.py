@@ -32,6 +32,7 @@ def parseMeasures(cwd):
   try:
     with open(cwd + AC_Measures, 'r') as file:
       for line in file:
+        line = line.replace('nan(ind)', 'nan')
         content = line.split()
         if len(content) == 3 and content[1] == '=':
           measures[content[0]] = content[2]
